@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление налогоплательщиками</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Управление налогоплательщиками</h1>
+
+        <!-- Таблица налогоплательщиков -->
+        <h2 class="mt-4">Список налогоплательщиков</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ф.И.О.</th>
+                    <th>ИНН</th>
+                    <th>Адрес</th>
+                    <th>Доход</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody id="taxpayer-table">
+                <!-- Данные налогоплательщиков будут вставляться сюда -->
+            </tbody>
+        </table>
+
+        <!-- Форма для добавления нового налогоплательщика -->
+        <h2 class="mt-5">Добавить нового налогоплательщика</h2>
+        <form id="taxpayer-form">
+            <div class="mb-3">
+                <input type="text" id="name" class="form-control" placeholder="Ф.И.О." required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="tin" class="form-control" placeholder="ИНН" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="address" class="form-control" placeholder="Адрес проживания" required>
+            </div>
+            <div class="mb-3">
+                <input type="number" id="income" class="form-control" name="income" step="any" placeholder="Доход" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+
+        <!-- Форма для обновления налогоплательщика -->
+        <h2 class="mt-5">Обновить данные налогоплательщика</h2>
+        <form id="update-form">
+            <div class="mb-3">
+                <input type="number" id="update-id" class="form-control" placeholder="ID" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="update-name" class="form-control" placeholder="Ф.И.О.">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="update-tin" class="form-control" placeholder="ИНН">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="update-address" class="form-control" placeholder="Адрес проживания">
+            </div>
+            <div class="mb-3">
+                <input type="number" id="update-income" class="form-control" name="update-income" step="any" placeholder="Доход">
+            </div>
+            <button type="submit" class="btn btn-warning">Обновить</button>
+        </form>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:8080';
+
+        // Получить список налогоплательщиков
+        async function fetchTaxpayers() {
+            try {
+                const response = await axios.get(`${apiUrl}/taxpayer`);
+                const tableBody = document.getElementById('taxpayer-table');
+                tableBody.innerHTML = '';
+                response.data.forEach(taxpayer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${taxpayer.id}</td>
+                        <td>${taxpayer.name}</td>
+                        <td>${taxpayer.tin}</td>
+                        <td>${taxpayer.address}</td>
+                        <td>${taxpayer.income}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteTaxpayer(${taxpayer.id})">Удалить</button>
+                            <button class="btn btn-secondary btn-sm" onclick="populateUpdateForm(${taxpayer.id})">Обновить</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching taxpayers:', error);
+            }
+        }
+
+        // Добавить нового налогоплательщика
+        document.getElementById('taxpayer-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const newTaxpayer = {
+                name: document.getElementById('name').value,
+                tin: document.getElementById('tin').value,
+                address: document.getElementById('address').value,
+                income: parseFloat(document.getElementById('income').value),
+            };
+            try {
+                await axios.post(`${apiUrl}/taxpayer`, newTaxpayer);
+                fetchTaxpayers();
+                event.target.reset();
+            } catch (error) {
+                console.error('Error adding taxpayer:', error);
+            }
+        });
+
+        // Обновить налогоплательщика
+        document.getElementById('update-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const id = document.getElementById('update-id').value;
+            const updatedTaxpayer = {
+                name: document.getElementById('update-name').value,
+                tin: document.getElementById('update-tin').value,
+                address: document.getElementById('update-address').value,
+                income: parseFloat(document.getElementById('update-income').value),
+            };
+            try {
+                await axios.put(`${apiUrl}/taxpayer/${id}`, updatedTaxpayer);
+                fetchTaxpayers();
+                event.target.reset();
+            } catch (error) {
+                console.error('Error updating taxpayer:', error);
+            }
+        });
+
+        // Удалить налогоплательщика
+        async function deleteTaxpayer(id) {
+            try {
+                await axios.delete(`${apiUrl}/taxpayer/${id}`);
+                fetchTaxpayers();
+            } catch (error) {
+                console.error('Error deleting taxpayer:', error);
+            }
+        }
+
+        // Заполнить форму обновления
+        function populateUpdateForm(id) {
+            const row = document.querySelector(`#taxpayer-table tr:nth-child(${id})`);
+            const cells = row.getElementsByTagName('td');
+            document.getElementById('update-id').value = cells[0].textContent;
+            document.getElementById('update-name').value = cells[1].textContent;
+            document.getElementById('update-tin').value = cells[2].textContent;
+            document.getElementById('update-address').value = cells[3].textContent;
+            document.getElementById('update-income').value = cells[4].textContent;
+        }
+
+        // Загрузить данные при старте
+        fetchTaxpayers();
+    </script>
+</body>
+</html>

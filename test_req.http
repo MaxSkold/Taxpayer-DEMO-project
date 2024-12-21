@@ -1,0 +1,11 @@
+###
+POST http://localhost:8080/taxpayer/
+Content-Type: application/json
+
+{
+  "name": "Дмитриев Дмитрий Дмитриевич",
+  "tin": "99-11-123456-78",
+  "address": "Москвоская ул., 9",
+  "income": -70000
+}
+
