@@ -88,12 +88,11 @@ This project is a RESTful API developed in Go, designed for managing taxpayer da
 ## Screenshots
 
 ### Frontend UI
-![Frontend UI](![image](https://github.com/user-attachments/assets/6926b8c3-65b6-4f42-9a64-c20200b2949e)
-)
+![image](https://github.com/user-attachments/assets/6926b8c3-65b6-4f42-9a64-c20200b2949e)
+
 
 ### API Request Example
-![API Request](![image](https://github.com/user-attachments/assets/adac96c5-1393-4091-a447-d61a7e132a00)
-)
+![image](https://github.com/user-attachments/assets/adac96c5-1393-4091-a447-d61a7e132a00)
 
 ---
 
