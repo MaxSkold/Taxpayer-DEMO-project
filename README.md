@@ -101,8 +101,4 @@ This project is a RESTful API developed in Go, designed for managing taxpayer da
 - Large payloads may cause slower response times.
 - Error messages could be more descriptive for complex validation cases.
 
----
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
