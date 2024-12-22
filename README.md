@@ -1,6 +1,6 @@
 # RESTful API for Managing Taxpayers
 Made and organized by Karakozov Maxim Romanovich. Group: ИСП-931
-**==Специально для ППК СГТУ им. Гагарина Ю.А.==**
+**Специально для ППК СГТУ им. Гагарина Ю.А.**
 
 ## Description
 This project is a RESTful API developed in Go, designed for managing taxpayer data. It provides endpoints for CRUD operations, ensuring seamless interaction between the backend and frontend. The system includes features for validating input, handling errors, and securely managing data using PostgreSQL.
