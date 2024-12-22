@@ -34,7 +34,7 @@ This project is a RESTful API developed in Go, designed for managing taxpayer da
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/taxpayer-api.git
+   git clone https://github.com/MaxSkold/Taxpayer-DEMO-project.git
    cd taxpayer-api
    ```
 
